@@ -188,44 +188,45 @@ export default function App() {
         </>
       ) : (
         <>
-          <div className="screen">
-            <div className="schedule-header">
-              <h2>
-                {savedEventName || currentEventKey}
-                {MOCK_MODE && (
-                  <span className="badge badge-warn" style={{ marginLeft: '0.5rem', fontSize: '0.65rem' }}>
-                    MOCK
-                  </span>
-                )}
-              </h2>
-              <div className="flex-gap" style={{ alignItems: 'center' }}>
-                <button
-                  className="btn btn-ghost btn-sm"
-                  onClick={() => setShowHelp(true)}
-                  aria-label="Open help"
-                  title="How to use this app"
-                >
-                  ?
-                </button>
-                <button
-                  className="btn btn-ghost btn-sm"
-                  onClick={() => setShowShare(true)}
-                  aria-label="Share schedule"
-                  title="Copy a share link"
-                  disabled={!currentEventKey}
-                >
-                  ↗
-                </button>
-                <button className="btn btn-ghost btn-sm" onClick={() => setScreen('setup')}>
-                  ✏ Edit
-                </button>
-                <RefreshButton
-                  onRefresh={handleRefresh}
-                  loading={loading}
-                  lastFetched={lastFetched}
-                />
-              </div>
+          <div className="schedule-header">
+            <h2>
+              {savedEventName || currentEventKey}
+              {MOCK_MODE && (
+                <span className="badge badge-warn" style={{ marginLeft: '0.5rem', fontSize: '0.65rem' }}>
+                  MOCK
+                </span>
+              )}
+            </h2>
+            <div className="flex-gap" style={{ alignItems: 'center' }}>
+              <button
+                className="btn btn-ghost btn-sm"
+                onClick={() => setShowHelp(true)}
+                aria-label="Open help"
+                title="How to use this app"
+              >
+                ?
+              </button>
+              <button
+                className="btn btn-ghost btn-sm"
+                onClick={() => setShowShare(true)}
+                aria-label="Share schedule"
+                title="Copy a share link"
+                disabled={!currentEventKey}
+              >
+                ↗
+              </button>
+              <button className="btn btn-ghost btn-sm" onClick={() => setScreen('setup')}>
+                ✏ Edit
+              </button>
+              <RefreshButton
+                onRefresh={handleRefresh}
+                loading={loading}
+                lastFetched={lastFetched}
+              />
             </div>
+          </div>
+
+          <div className="screen">
 
             {/* Warn when today has no matches (e.g. practice day or wrong date) */}
             {!loading && matches.length > 0 && todayMatches.length === 0 && (
@@ -252,31 +253,35 @@ export default function App() {
             )}
 
             {ready && activeTab === 'team' && (
-              <TeamView
-                teams={teams}
-                matches={todayMatches}
-                dayStart={dayStart}
-                dayEnd={dayEnd}
-                settings={settings}
-                lunchWindow={lunchWindow}
-                interviewed={interviewed}
-                onToggleInterviewed={handleToggleInterviewed}
-                nowSec={nowSec}
-              />
+              <div className="view-constrained">
+                <TeamView
+                  teams={teams}
+                  matches={todayMatches}
+                  dayStart={dayStart}
+                  dayEnd={dayEnd}
+                  settings={settings}
+                  lunchWindow={lunchWindow}
+                  interviewed={interviewed}
+                  onToggleInterviewed={handleToggleInterviewed}
+                  nowSec={nowSec}
+                />
+              </div>
             )}
 
             {ready && activeTab === 'merged' && (
-              <MergedView
-                teams={teams}
-                matches={todayMatches}
-                dayStart={dayStart}
-                dayEnd={dayEnd}
-                settings={settings}
-                lunchWindow={lunchWindow}
-                interviewed={interviewed}
-                onToggleInterviewed={handleToggleInterviewed}
-                nowSec={nowSec}
-              />
+              <div className="view-constrained">
+                <MergedView
+                  teams={teams}
+                  matches={todayMatches}
+                  dayStart={dayStart}
+                  dayEnd={dayEnd}
+                  settings={settings}
+                  lunchWindow={lunchWindow}
+                  interviewed={interviewed}
+                  onToggleInterviewed={handleToggleInterviewed}
+                  nowSec={nowSec}
+                />
+              </div>
             )}
 
             {ready && activeTab === 'side' && (

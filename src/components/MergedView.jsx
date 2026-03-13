@@ -167,25 +167,27 @@ export default function MergedView({ teams, matches, dayStart, dayEnd, settings,
   }, [])
 
   // ── Render ────────────────────────────────────────────────────
+  const sortedTeams = useMemo(() => [...teams].sort((a, b) => a.number - b.number), [teams])
+
   return (
     <div>
-      {/* Intro + controls row */}
-      <div className="merged-header">
-        <div className="merged-intro">
-          <p className="text-muted" style={{ fontSize: '0.82rem', marginBottom: '0.2rem' }}>
-            Showing <strong>{activeTeams.length}</strong> uninterviewed team{activeTeams.length !== 1 ? 's' : ''}{excludedTeams.length > 0 ? `, hiding ${excludedTeams.length} interviewed` : ''}.
-            Greener = more teams free simultaneously.
-          </p>
+      {/* ── Sticky control panel ─────────────────────────────────── */}
+      <div className="merged-sticky-header">
+        {/* Intro + expand controls row */}
+        <div className="merged-header">
+          <div className="merged-intro">
+            <p className="text-muted" style={{ fontSize: '0.82rem', marginBottom: '0.2rem' }}>
+              Showing <strong>{activeTeams.length}</strong> uninterviewed team{activeTeams.length !== 1 ? 's' : ''}{excludedTeams.length > 0 ? `, hiding ${excludedTeams.length} interviewed` : ''}.
+              Greener = more teams free simultaneously.
+            </p>
+          </div>
+          <ExpandControls mode={expandMode} onMode={handleSetMode} />
         </div>
-        <ExpandControls mode={expandMode} onMode={handleSetMode} />
-      </div>
 
-      {/* Team checklist — sorted by team number */}
-      {teams.length > 0 && (() => {
-        const sorted = [...teams].sort((a, b) => a.number - b.number)
-        return (
+        {/* Team checklist — sorted by team number */}
+        {teams.length > 0 && (
           <div className="merged-checklist">
-            {sorted.map(t => (
+            {sortedTeams.map(t => (
               <label key={t.number} className="merged-checklist-item">
                 <input
                   type="checkbox"
@@ -199,8 +201,8 @@ export default function MergedView({ teams, matches, dayStart, dayEnd, settings,
               </label>
             ))}
           </div>
-        )
-      })()}
+        )}
+      </div>
 
       {/* Timeline grid */}
       <div style={{ display: 'flex', gap: 0 }}>
