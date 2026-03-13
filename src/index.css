@@ -385,9 +385,6 @@ label {
 .side-by-side-container {
   display: flex;
   gap: 0;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-  scroll-snap-type: x mandatory;
   padding-bottom: 0.5rem;
 }
 

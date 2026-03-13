@@ -62,7 +62,7 @@ export default function SideBySideView({ teams, matches, dayStart, dayEnd, setti
   }), [sortedTeams, matches, dayStart, dayEnd, settings])
 
   return (
-    <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+    <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollSnapType: 'x mandatory' }}>
       {/* Team header row */}
       <div style={{ display: 'flex', borderBottom: '1px solid var(--clr-border)', marginBottom: 4 }}>
         <div style={{ flexShrink: 0, width: 48 }} />
