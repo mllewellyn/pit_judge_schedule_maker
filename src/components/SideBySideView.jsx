@@ -63,19 +63,9 @@ export default function SideBySideView({ teams, matches, dayStart, dayEnd, setti
 
   return (
     <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
-      {/* ── Sticky header row ─────────────────────────────────────── */}
-      <div style={{
-        display: 'flex',
-        position: 'sticky',
-        top: 0,
-        zIndex: 20,
-        background: 'var(--clr-bg)',
-        borderBottom: '1px solid var(--clr-border)',
-      }}>
-        {/* Spacer aligned with the time axis */}
+      {/* Team header row */}
+      <div style={{ display: 'flex', borderBottom: '1px solid var(--clr-border)', marginBottom: 4 }}>
         <div style={{ flexShrink: 0, width: 48 }} />
-
-        {/* One header cell per team */}
         {teamData.map(({ team }) => (
           <div
             key={team.number}
@@ -101,7 +91,7 @@ export default function SideBySideView({ teams, matches, dayStart, dayEnd, setti
         ))}
       </div>
 
-      {/* ── Timeline body ──────────────────────────────────────────── */}
+      {/* Timeline body */}
       <div style={{ display: 'flex' }}>
         {/* Shared time axis */}
         <div style={{ flexShrink: 0, width: 48, position: 'relative', height: totalPx }}>
