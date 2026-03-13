@@ -23,6 +23,18 @@ export async function fetchEvents(year) {
 }
 
 /**
+ * Returns basic info for a single event: { key, name, short_name, ... }
+ * Used to resolve a human-readable name when loading via a share link.
+ */
+export async function fetchEventInfo(eventKey) {
+  if (MOCK_MODE) {
+    const events = await fetchEventsMock(new Date().getFullYear())
+    return events.find(e => e.key === eventKey) ?? { key: eventKey, name: eventKey }
+  }
+  return tbaFetch(`/event/${eventKey}/simple`)
+}
+
+/**
  * Returns all teams registered at an event in simple format.
  * Each entry: { key, team_number, nickname, city, state_prov, country }
  */

@@ -8,8 +8,7 @@ import SettingsPanel from './components/SettingsPanel.jsx'
 import HelpPanel from './components/HelpPanel.jsx'
 import SharePanel from './components/SharePanel.jsx'
 import RefreshButton from './components/RefreshButton.jsx'
-import { fetchMatches } from './api/tba.js'
-import { fetchEventTeams } from './api/tba.js'
+import { fetchMatches, fetchEventTeams, fetchEventInfo } from './api/tba.js'
 import { deriveDayRange, filterTodayMatches, detectLunchBreak } from './utils/availability.js'
 import { useLocalStorage } from './hooks/useLocalStorage.js'
 import { useCurrentTime } from './hooks/useCurrentTime.js'
@@ -122,9 +121,10 @@ export default function App() {
     setFetchError(null)
     setNoSchedule(false)
     try {
-      const [matchData, rosterData] = await Promise.all([
+      const [matchData, rosterData, eventInfo] = await Promise.all([
         fetchMatches(eventKey),
         fetchEventTeams(eventKey).catch(() => []),
+        eventName ? Promise.resolve(null) : fetchEventInfo(eventKey).catch(() => null),
       ])
 
       if (matchData.length === 0) {
@@ -133,6 +133,9 @@ export default function App() {
         return
       }
       setNoSchedule(false)
+
+      const resolvedName = eventName || eventInfo?.name || eventKey
+      setSavedEventName(resolvedName)
 
       const numbers = teamsRaw
         .split(/[\n,]+/)
