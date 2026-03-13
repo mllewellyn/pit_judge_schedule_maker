@@ -108,7 +108,8 @@ export default function SideBySideView({ teams, matches, dayStart, dayEnd, setti
                 </div>
               ))}
               {available.map(([s, e], i) => {
-                const status = slotStatus(s, e, nowSec, settings.minInterviewDuration ?? 15)
+                const isInterviewed = !!interviewed[team.number]
+                const status = isInterviewed ? 'past' : slotStatus(s, e, nowSec, settings.minInterviewDuration ?? 15)
                 return (
                   <div
                     key={i}

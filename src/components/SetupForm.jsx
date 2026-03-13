@@ -24,23 +24,7 @@ export default function SetupForm({ savedEventKey, savedTeamsRaw, onLoad, onHelp
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  // Fetch event list once on mount
-  useEffect(() => {
-    fetchEvents(CURRENT_YEAR)
-      .then(data => {
-        const sorted = [...data].sort((a, b) => a.name.localeCompare(b.name))
-        setEvents(sorted)
-        // Resolve name for pre-saved event key
-        if (savedEventKey) {
-          const found = sorted.find(e => e.key === savedEventKey)
-          if (found) setEventName(found.name)
-        }
-      })
-      .catch(err => setEventsError(err.message))
-      .finally(() => setEventsLoading(false))
-  }, [savedEventKey])
-
-  // Fetch roster whenever eventKey changes
+  // Fetch roster whenever a key is provided
   const loadRoster = useCallback((key) => {
     if (!key) { setRoster(null); return }
     setRosterLoading(true)
@@ -50,11 +34,26 @@ export default function SetupForm({ savedEventKey, savedTeamsRaw, onLoad, onHelp
       .finally(() => setRosterLoading(false))
   }, [])
 
-  // Load roster for pre-saved or mock-default event on mount
+  // Fetch event list; re-runs when savedEventKey changes (e.g. from a share link arriving
+  // after mount). When the key resolves to a known event, sync both eventKey and eventName
+  // so the form is fully ready to submit without requiring a manual re-selection.
   useEffect(() => {
-    if (defaultEventKey) loadRoster(defaultEventKey)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    fetchEvents(CURRENT_YEAR)
+      .then(data => {
+        const sorted = [...data].sort((a, b) => a.name.localeCompare(b.name))
+        setEvents(sorted)
+        if (savedEventKey) {
+          const found = sorted.find(e => e.key === savedEventKey)
+          if (found) {
+            setEventKey(found.key)
+            setEventName(found.name)
+            loadRoster(found.key)
+          }
+        }
+      })
+      .catch(err => setEventsError(err.message))
+      .finally(() => setEventsLoading(false))
+  }, [savedEventKey, loadRoster])
 
   function handleEventSelect(key, eventObj) {
     setEventKey(key)
