@@ -1,4 +1,5 @@
-import { TBA_API_KEY, TBA_BASE } from '../config.js'
+import { TBA_API_KEY, TBA_BASE, MOCK_MODE } from '../config.js'
+import { fetchEventsMock, fetchEventTeamsMock, fetchMatchesMock } from './mock.js'
 
 function headers() {
   return { 'X-TBA-Auth-Key': TBA_API_KEY }
@@ -17,6 +18,7 @@ async function tbaFetch(path) {
  * Each entry: { key, name, short_name, event_code, start_date, end_date, city, state_prov, country }
  */
 export async function fetchEvents(year) {
+  if (MOCK_MODE) return fetchEventsMock(year)
   return tbaFetch(`/events/${year}/simple`)
 }
 
@@ -25,6 +27,7 @@ export async function fetchEvents(year) {
  * Each entry: { key, team_number, nickname, city, state_prov, country }
  */
 export async function fetchEventTeams(eventKey) {
+  if (MOCK_MODE) return fetchEventTeamsMock(eventKey)
   return tbaFetch(`/event/${eventKey}/teams/simple`)
 }
 
@@ -34,6 +37,7 @@ export async function fetchEventTeams(eventKey) {
  * time fields are Unix timestamps (seconds). null if not yet scheduled.
  */
 export async function fetchMatches(eventKey) {
+  if (MOCK_MODE) return fetchMatchesMock(eventKey)
   return tbaFetch(`/event/${eventKey}/matches/simple`)
 }
 

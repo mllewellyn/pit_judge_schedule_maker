@@ -1,6 +1,6 @@
 export default function RefreshButton({ onRefresh, loading, lastFetched }) {
   const timeStr = lastFetched
-    ? new Date(lastFetched).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    ? new Date(lastFetched).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })
     : null
 
   return (

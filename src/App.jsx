@@ -10,7 +10,8 @@ import { fetchMatches } from './api/tba.js'
 import { fetchEventTeams } from './api/tba.js'
 import { deriveDayRange } from './utils/availability.js'
 import { useLocalStorage } from './hooks/useLocalStorage.js'
-import { DEFAULT_SETTINGS } from './config.js'
+import { DEFAULT_SETTINGS, MOCK_MODE } from './config.js'
+import { MOCK_DEFAULT_EVENT_KEY, MOCK_DEFAULT_TEAMS } from './api/mockData.js'
 
 const LS_EVENT_KEY   = 'pitjudge_event_key'
 const LS_EVENT_NAME  = 'pitjudge_event_name'
@@ -28,8 +29,10 @@ export default function App() {
   const [activeTab,      setActiveTab]      = useLocalStorage(LS_TAB,        'team')
 
   // Schedule-screen state (not persisted — re-fetched on load)
+  // In mock mode always start on schedule (auto-load fires immediately in useEffect)
+  const hasRestoredSession = savedEventKey && savedTeamsRaw
   const [screen, setScreen] = useState(
-    savedEventKey && savedTeamsRaw ? 'schedule' : 'setup'
+    hasRestoredSession || MOCK_MODE ? 'schedule' : 'setup'
   )
   const [teams,       setTeams]       = useState([])  // [{ number, nickname }]
   const [matches,     setMatches]     = useState([])
@@ -41,10 +44,12 @@ export default function App() {
   const [showSettings, setShowSettings] = useState(false)
   const [currentEventKey, setCurrentEventKey] = useState(savedEventKey || '')
 
-  // Auto-load schedule when restoring from localStorage
+  // Auto-load schedule when restoring from localStorage, or from mock defaults
   useEffect(() => {
-    if (savedEventKey && savedTeamsRaw) {
-      loadSchedule(savedEventKey, savedTeamsRaw, savedEventName)
+    const eventKey = savedEventKey || (MOCK_MODE ? MOCK_DEFAULT_EVENT_KEY : '')
+    const teamsRaw = savedTeamsRaw || (MOCK_MODE ? MOCK_DEFAULT_TEAMS : '')
+    if (eventKey && teamsRaw) {
+      loadSchedule(eventKey, teamsRaw, savedEventName)
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -127,7 +132,10 @@ export default function App() {
         <>
           <div className="screen">
             <div className="schedule-header">
-              <h2>{savedEventName || currentEventKey}</h2>
+              <h2>
+                {savedEventName || currentEventKey}
+                {MOCK_MODE && <span className="badge badge-warn" style={{ marginLeft: '0.5rem', fontSize: '0.65rem' }}>MOCK</span>}
+              </h2>
               <div className="flex-gap" style={{ alignItems: 'center' }}>
                 <button className="btn btn-ghost btn-sm" onClick={goToSetup}>
                   ✏ Edit

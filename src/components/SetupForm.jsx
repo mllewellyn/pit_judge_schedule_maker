@@ -2,20 +2,25 @@ import { useState, useEffect, useCallback } from 'react'
 import EventSearch from './EventSearch.jsx'
 import TeamNumberInput, { parseTeamNumbers } from './TeamNumberInput.jsx'
 import { fetchEvents, fetchEventTeams } from '../api/tba.js'
-import { CURRENT_YEAR } from '../config.js'
+import { CURRENT_YEAR, MOCK_MODE } from '../config.js'
+import { MOCK_DEFAULT_EVENT_KEY, MOCK_DEFAULT_TEAMS } from '../api/mockData.js'
 
 export default function SetupForm({ savedEventKey, savedTeamsRaw, onLoad }) {
   const [events, setEvents] = useState([])
   const [eventsLoading, setEventsLoading] = useState(true)
   const [eventsError, setEventsError] = useState(null)
 
-  const [eventKey, setEventKey] = useState(savedEventKey || '')
+  // In mock mode, pre-populate the demo event/teams if nothing is saved yet
+  const defaultEventKey = savedEventKey || (MOCK_MODE ? MOCK_DEFAULT_EVENT_KEY : '')
+  const defaultTeamsRaw = savedTeamsRaw || (MOCK_MODE ? MOCK_DEFAULT_TEAMS : '')
+
+  const [eventKey, setEventKey] = useState(defaultEventKey)
   const [eventName, setEventName] = useState('')
 
   const [roster, setRoster] = useState(null)
   const [rosterLoading, setRosterLoading] = useState(false)
 
-  const [teamsRaw, setTeamsRaw] = useState(savedTeamsRaw || '')
+  const [teamsRaw, setTeamsRaw] = useState(defaultTeamsRaw)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
@@ -45,10 +50,11 @@ export default function SetupForm({ savedEventKey, savedTeamsRaw, onLoad }) {
       .finally(() => setRosterLoading(false))
   }, [])
 
-  // Load roster for pre-saved event on mount
+  // Load roster for pre-saved or mock-default event on mount
   useEffect(() => {
-    if (savedEventKey) loadRoster(savedEventKey)
-  }, [savedEventKey, loadRoster])
+    if (defaultEventKey) loadRoster(defaultEventKey)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   function handleEventSelect(key, eventObj) {
     setEventKey(key)
@@ -80,9 +86,17 @@ export default function SetupForm({ savedEventKey, savedTeamsRaw, onLoad }) {
         <p>Track team interview availability during competition</p>
       </div>
 
-      {eventsError && (
+      {MOCK_MODE && (
+        <div className="card" style={{ marginBottom: '1rem', fontSize: '0.85rem', borderColor: 'var(--clr-primary)' }}>
+          <strong>Mock mode active</strong> — using local demo data. Event and teams are pre-filled.
+        </div>
+      )}
+
+      {eventsError && !MOCK_MODE && (
         <div className="error-msg">
-          Could not load events list: {eventsError}. Check your TBA API key in config.js.
+          Could not load events list: {eventsError}
+          <br />
+          Add your TBA key to <code>.env.local</code> or run <code>npm run dev:mock</code> to use demo data.
         </div>
       )}
 

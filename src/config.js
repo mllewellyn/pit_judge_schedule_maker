@@ -1,6 +1,21 @@
+// ── API mode ─────────────────────────────────────────────────────────────────
+//
+//  Mock mode (no API key needed):
+//    npm run dev:mock
+//    Sets VITE_MOCK_MODE=true — uses local fake data from src/api/mockData.js
+//
+//  Real mode (requires a TBA API key):
+//    Copy .env.example → .env.local and fill in VITE_TBA_KEY.
+//    Then: npm run dev
+//
+// ─────────────────────────────────────────────────────────────────────────────
+
+export const MOCK_MODE = import.meta.env.VITE_MOCK_MODE === 'true'
+
 // Read-only TBA API key — safe to commit for public data access.
+// Provide via VITE_TBA_KEY in .env.local (preferred) or hardcode here.
 // Register at https://www.thebluealliance.com/account to get a key.
-export const TBA_API_KEY = 'REPLACE_WITH_YOUR_TBA_KEY'
+export const TBA_API_KEY = import.meta.env.VITE_TBA_KEY ?? 'REPLACE_WITH_YOUR_TBA_KEY'
 
 export const TBA_BASE = 'https://www.thebluealliance.com/api/v3'
 
@@ -9,8 +24,8 @@ export const CURRENT_YEAR = new Date().getFullYear()
 
 // Default availability settings
 export const DEFAULT_SETTINGS = {
-  preMatchBuffer: 10,   // minutes blocked before match start
-  postMatchBuffer: 5,   // minutes blocked after match end
+  preMatchBuffer: 10,       // minutes blocked before match start
+  postMatchBuffer: 5,       // minutes blocked after match end
   minInterviewDuration: 15, // minimum available block in minutes
 }
 
