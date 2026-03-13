@@ -321,6 +321,12 @@ label {
   border: 1px solid #546e7a;
 }
 
+.timeline-block.lunch {
+  background: #2a2010;
+  border: 1px solid #6b5a20;
+  color: #c8a84b;
+}
+
 .timeline-block.available {
   background: var(--clr-available);
   color: #a5d6a7;
@@ -384,17 +390,12 @@ label {
   padding: 0.4rem 0.25rem;
   font-size: 0.8rem;
   font-weight: 700;
-  background: var(--clr-surface);
-  border-bottom: 1px solid var(--clr-border);
-  position: sticky;
-  top: 0;
-  z-index: 10;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.side-by-side-team.interviewed .side-by-side-team-header {
+.side-by-side-team-header.interviewed {
   color: var(--clr-text-muted);
   text-decoration: line-through;
 }

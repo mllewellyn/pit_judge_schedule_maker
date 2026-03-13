@@ -225,6 +225,20 @@ export default function MergedView({ teams, matches, dayStart, dayEnd, settings,
             <div className="timeline-now-line" style={{ top: toPx(nowSec), zIndex: 5 }} />
           )}
 
+          {/* Lunch break overlay */}
+          {lunchWindow && lunchWindow[0] >= gridStart && lunchWindow[1] <= gridEnd && (() => {
+            const top = toPx(lunchWindow[0])
+            const height = toPx(lunchWindow[1]) - top
+            return (
+              <div
+                className="timeline-block lunch"
+                style={{ position: 'absolute', top, height: height - 1, left: 2, right: 2, zIndex: 4, borderRadius: 3, display: 'flex', alignItems: 'center', padding: '0 6px', boxSizing: 'border-box', pointerEvents: 'none' }}
+              >
+                <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--clr-text-muted)', whiteSpace: 'nowrap' }}>🍽 Lunch</span>
+              </div>
+            )
+          })()}
+
           {groups.map((group, idx) => {
             const top    = toPx(group.start)
             const height = toPx(group.end) - top
