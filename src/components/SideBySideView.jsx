@@ -61,54 +61,58 @@ export default function SideBySideView({ teams, matches, dayStart, dayEnd, setti
     return { team: t, matchBlocks, available }
   }), [sortedTeams, matches, dayStart, dayEnd, settings])
 
-  return (
-    <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch', scrollSnapType: 'x mandatory' }}>
-      {/* Team header row */}
-      <div style={{ display: 'flex', borderBottom: '1px solid var(--clr-border)', marginBottom: 4 }}>
-        <div style={{ flexShrink: 0, width: 48 }} />
-        {teamData.map(({ team }) => (
-          <div
-            key={team.number}
-            className={`side-by-side-team-header${interviewed[team.number] ? ' interviewed' : ''}`}
-            style={{ width: COL_WIDTH, flexShrink: 0 }}
-          >
-            <div style={{ fontWeight: 700, fontSize: '0.85rem' }}>{team.number}</div>
-            {team.nickname && (
-              <div style={{ fontSize: '0.6rem', color: 'var(--clr-text-muted)', fontWeight: 400, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                {team.nickname}
-              </div>
-            )}
-            <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.2rem', fontSize: '0.6rem', cursor: 'pointer', marginTop: '0.15rem' }}>
-              <input
-                type="checkbox"
-                checked={!!interviewed[team.number]}
-                onChange={() => onToggleInterviewed(team.number)}
-                style={{ width: 13, height: 13, accentColor: 'var(--clr-available-light)', flexShrink: 0 }}
-              />
-              Done
-            </label>
-          </div>
-        ))}
-      </div>
+  const totalWidth = 48 + teamData.length * COL_WIDTH
 
-      {/* Timeline body */}
-      <div style={{ display: 'flex' }}>
-        {/* Shared time axis */}
-        <div style={{ flexShrink: 0, width: 48, position: 'relative', height: totalPx }}>
-          {ticks.map(t => (
-            <div key={t} className="timeline-axis-label" style={{ top: toPx(t) }}>
-              {formatTime(t)}
+  return (
+    <div style={{ overflowX: 'auto', WebkitOverflowScrolling: 'touch' }}>
+      {/* Single flat layout — one scroll container, header + timeline in one flex column */}
+      <div style={{ display: 'flex', flexDirection: 'column', width: totalWidth }}>
+
+        {/* Team header row */}
+        <div style={{ display: 'flex', borderBottom: '1px solid var(--clr-border)', marginBottom: 4, flexShrink: 0 }}>
+          <div style={{ flexShrink: 0, width: 48 }} />
+          {teamData.map(({ team }) => (
+            <div
+              key={team.number}
+              className={`side-by-side-team-header${interviewed[team.number] ? ' interviewed' : ''}`}
+              style={{ width: COL_WIDTH, flexShrink: 0 }}
+            >
+              <div style={{ fontWeight: 700, fontSize: '0.85rem' }}>{team.number}</div>
+              {team.nickname && (
+                <div style={{ fontSize: '0.6rem', color: 'var(--clr-text-muted)', fontWeight: 400, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                  {team.nickname}
+                </div>
+              )}
+              <label style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.2rem', fontSize: '0.6rem', cursor: 'pointer', marginTop: '0.15rem' }}>
+                <input
+                  type="checkbox"
+                  checked={!!interviewed[team.number]}
+                  onChange={() => onToggleInterviewed(team.number)}
+                  style={{ width: 13, height: 13, accentColor: 'var(--clr-available-light)', flexShrink: 0 }}
+                />
+                Done
+              </label>
             </div>
           ))}
         </div>
 
-        {/* Team timeline columns (no headers — they're in the sticky row above) */}
-        <div className="side-by-side-container" style={{ flex: 1 }}>
+        {/* Timeline body */}
+        <div style={{ display: 'flex', flexShrink: 0 }}>
+          {/* Shared time axis */}
+          <div style={{ flexShrink: 0, width: 48, position: 'relative', height: totalPx }}>
+            {ticks.map(t => (
+              <div key={t} className="timeline-axis-label" style={{ top: toPx(t) }}>
+                {formatTime(t)}
+              </div>
+            ))}
+          </div>
+
+          {/* Team timeline columns */}
           {teamData.map(({ team, matchBlocks, available }) => (
             <div
               key={team.number}
               className={`side-by-side-team${interviewed[team.number] ? ' interviewed' : ''}`}
-              style={{ width: COL_WIDTH }}
+              style={{ width: COL_WIDTH, flexShrink: 0 }}
             >
               <div style={{ position: 'relative', height: totalPx }}>
                 {ticks.map(t => (
@@ -143,6 +147,7 @@ export default function SideBySideView({ teams, matches, dayStart, dayEnd, setti
             </div>
           ))}
         </div>
+
       </div>
     </div>
   )

@@ -382,16 +382,8 @@ label {
 }
 
 /* ── Side-by-side ──────────────────────────────────────────────── */
-.side-by-side-container {
-  display: flex;
-  gap: 0;
-  padding-bottom: 0.5rem;
-}
-
 .side-by-side-team {
   flex-shrink: 0;
-  /* width set inline per component */
-  scroll-snap-align: start;
 }
 
 .side-by-side-team-header {
