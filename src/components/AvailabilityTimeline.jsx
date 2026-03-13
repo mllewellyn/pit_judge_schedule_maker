@@ -14,11 +14,17 @@ export function formatTime(unix) {
   return `${h12}:${m}${ampm}`
 }
 
-/** Classify an available slot relative to current time. */
-function slotStatus(s, e, nowSec) {
+/**
+ * Classify an available slot relative to current time.
+ * A slot is 'current' (yellow) only when it has started AND there is no longer
+ * enough time left for a full interview — matching the side-by-side view logic.
+ */
+function slotStatus(s, e, nowSec, minInterviewDuration) {
   if (!nowSec) return 'future'
   if (e <= nowSec) return 'past'
-  if (s <= nowSec) return 'current'
+  if (s <= nowSec) {
+    return (e - nowSec) < minInterviewDuration * 60 ? 'current' : 'future'
+  }
   return 'future'
 }
 
@@ -39,6 +45,7 @@ export default function AvailabilityTimeline({
   dayEnd,
   showAxis = true,
   nowSec,
+  settings = {},
 }) {
   const totalSec = dayEnd - dayStart
   const totalPx = (totalSec / HOUR) * PX_PER_HOUR
@@ -105,7 +112,7 @@ export default function AvailabilityTimeline({
 
         {/* Available blocks — colour-coded by past / in-progress / future */}
         {availableSlots.map(([s, e], i) => {
-          const status = slotStatus(s, e, nowSec)
+          const status = slotStatus(s, e, nowSec, settings.minInterviewDuration ?? 15)
           return (
             <div
               key={i}

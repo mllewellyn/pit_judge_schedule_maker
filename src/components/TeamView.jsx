@@ -63,6 +63,7 @@ export default function TeamView({ teams, matches, dayStart, dayEnd, settings, i
             dayEnd={dayEnd}
             showAxis
             nowSec={nowSec}
+            settings={settings}
           />
         </>
       ) : (

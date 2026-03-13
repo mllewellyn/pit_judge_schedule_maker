@@ -15,7 +15,7 @@ export const MOCK_MODE = import.meta.env.VITE_MOCK_MODE === 'true'
 // Read-only TBA API key — safe to commit for public data access.
 // Provide via VITE_TBA_KEY in .env.local (preferred) or hardcode here.
 // Register at https://www.thebluealliance.com/account to get a key.
-export const TBA_API_KEY = import.meta.env.VITE_TBA_KEY ?? 'REPLACE_WITH_YOUR_TBA_KEY'
+export const TBA_API_KEY = import.meta.env.VITE_TBA_KEY ?? 'aPI3TrFE1dO99sdVlGytxY5Fjw9hZBIXS6bU2I7ff26y2k3LOaWxvy1Z6F9ZsdV0'
 
 export const TBA_BASE = 'https://www.thebluealliance.com/api/v3'
 
