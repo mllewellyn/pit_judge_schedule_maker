@@ -125,16 +125,6 @@ npm run test:e2e
 npm run screenshots
 ```
 
-### Environment variables
-
-Copy `.env.example` to `.env.local` and fill in your TBA API key:
-
-```
-VITE_TBA_KEY=your_key_here
-```
-
-Register for a free read-only key at <https://www.thebluealliance.com/account>.
-
 ### Deployment
 
-Pushing to `main` triggers the GitHub Actions workflow (`.github/workflows/deploy.yml`), which runs tests and deploys to GitHub Pages. Add your TBA key as a repository secret named `VITE_TBA_KEY`.
+Pushing to `main` triggers the GitHub Actions workflow (`.github/workflows/deploy.yml`), which runs tests and deploys to GitHub Pages. The TBA API key is hardcoded in `src/config.js` — no repository secrets required.

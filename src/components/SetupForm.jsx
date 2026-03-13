@@ -5,7 +5,7 @@ import { fetchEvents, fetchEventTeams } from '../api/tba.js'
 import { CURRENT_YEAR, MOCK_MODE } from '../config.js'
 import { MOCK_DEFAULT_EVENT_KEY, MOCK_DEFAULT_TEAMS } from '../api/mockData.js'
 
-export default function SetupForm({ savedEventKey, savedTeamsRaw, onLoad, onHelp }) {
+export default function SetupForm({ savedEventKey, savedTeamsRaw, onLoad, onHelp, noSchedule }) {
   const [events, setEvents] = useState([])
   const [eventsLoading, setEventsLoading] = useState(true)
   const [eventsError, setEventsError] = useState(null)
@@ -99,6 +99,14 @@ export default function SetupForm({ savedEventKey, savedTeamsRaw, onLoad, onHelp
       {MOCK_MODE && (
         <div className="card" style={{ marginBottom: '1rem', fontSize: '0.85rem', borderColor: 'var(--clr-primary)' }}>
           <strong>Mock mode active</strong> — using local demo data. Event and teams are pre-filled.
+        </div>
+      )}
+
+      {noSchedule && (
+        <div className="error-msg" style={{ borderColor: '#f5c518', color: '#f5c518' }}>
+          <strong>No match schedule available yet</strong> for <strong>{eventKey || 'this event'}</strong>.
+          <br />
+          TBA does not have qualification match times posted yet. Check back once the schedule is published, then tap <strong>Load Schedule</strong> again.
         </div>
       )}
 

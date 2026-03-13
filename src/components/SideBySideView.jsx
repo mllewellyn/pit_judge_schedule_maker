@@ -19,7 +19,7 @@ function slotStatus(s, e, nowSec, minInterviewDuration) {
   return 'future'
 }
 
-export default function SideBySideView({ teams, matches, dayStart, dayEnd, settings, interviewed, onToggleInterviewed, nowSec }) {
+export default function SideBySideView({ teams, matches, dayStart, dayEnd, settings, lunchWindow, interviewed, onToggleInterviewed, nowSec }) {
   const totalSec = dayEnd - dayStart
   const totalPx = (totalSec / HOUR) * PX_PER_HOUR
 
@@ -53,7 +53,7 @@ export default function SideBySideView({ teams, matches, dayStart, dayEnd, setti
 
   const teamData = useMemo(() => sortedTeams.map(t => {
     const tm = matchesForTeam(matches, t.number)
-    const available = teamAvailability(tm, dayStart, dayEnd, settings)
+    const available = teamAvailability(tm, dayStart, dayEnd, settings, lunchWindow)
     const matchBlocks = tm
       .map(m => matchStartTime(m))
       .filter(x => x != null)

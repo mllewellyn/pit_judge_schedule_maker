@@ -10,7 +10,7 @@ import SharePanel from './components/SharePanel.jsx'
 import RefreshButton from './components/RefreshButton.jsx'
 import { fetchMatches } from './api/tba.js'
 import { fetchEventTeams } from './api/tba.js'
-import { deriveDayRange, filterTodayMatches } from './utils/availability.js'
+import { deriveDayRange, filterTodayMatches, detectLunchBreak } from './utils/availability.js'
 import { useLocalStorage } from './hooks/useLocalStorage.js'
 import { useCurrentTime } from './hooks/useCurrentTime.js'
 import { DEFAULT_SETTINGS, MOCK_MODE } from './config.js'
@@ -44,6 +44,7 @@ export default function App() {
   const [showHelp,     setShowHelp]     = useState(false)
   const [showShare,    setShowShare]    = useState(false)
   const [currentEventKey, setCurrentEventKey] = useState(savedEventKey || '')
+  const [noSchedule,   setNoSchedule]   = useState(false)
 
   // Live current-time — updates every 30 s so the now-line and slot colours stay fresh
   const nowSec = useCurrentTime(30_000)
@@ -58,6 +59,20 @@ export default function App() {
     if (matches.length > 0) return deriveDayRange(matches)
     return [0, 0]
   }, [todayMatches, matches])
+
+  // Auto-detect lunch break from today's match schedule
+  const detectedLunch = useMemo(() => detectLunchBreak(todayMatches), [todayMatches])
+
+  // Resolve the lunch window to block based on settings
+  const lunchWindow = useMemo(() => {
+    if (!settings.lunchBreakEnabled) return null
+    if (settings.lunchBreakAuto) return detectedLunch
+    if (settings.lunchBreakStartMin == null) return null
+    const today = new Date()
+    const midnight = new Date(today.getFullYear(), today.getMonth(), today.getDate()).getTime() / 1000
+    const start = midnight + settings.lunchBreakStartMin * 60
+    return [start, start + (settings.lunchBreakDuration ?? 45) * 60]
+  }, [settings, detectedLunch])
 
   const ready = !loading && todayMatches.length > 0 && teams.length > 0 && dayStart && dayEnd
 
@@ -111,6 +126,13 @@ export default function App() {
         fetchEventTeams(eventKey).catch(() => []),
       ])
 
+      if (matchData.length === 0) {
+        setNoSchedule(true)
+        setScreen('setup')
+        return
+      }
+      setNoSchedule(false)
+
       const numbers = teamsRaw
         .split(/[\n,]+/)
         .map(s => parseInt(s.trim(), 10))
@@ -159,6 +181,7 @@ export default function App() {
             savedTeamsRaw={savedTeamsRaw}
             onLoad={handleSetupLoad}
             onHelp={() => setShowHelp(true)}
+            noSchedule={noSchedule}
           />
           {showHelp && <HelpPanel onClose={() => setShowHelp(false)} />}
         </>
@@ -234,6 +257,7 @@ export default function App() {
                 dayStart={dayStart}
                 dayEnd={dayEnd}
                 settings={settings}
+                lunchWindow={lunchWindow}
                 interviewed={interviewed}
                 onToggleInterviewed={handleToggleInterviewed}
                 nowSec={nowSec}
@@ -247,6 +271,7 @@ export default function App() {
                 dayStart={dayStart}
                 dayEnd={dayEnd}
                 settings={settings}
+                lunchWindow={lunchWindow}
                 interviewed={interviewed}
                 onToggleInterviewed={handleToggleInterviewed}
                 nowSec={nowSec}
@@ -260,6 +285,7 @@ export default function App() {
                 dayStart={dayStart}
                 dayEnd={dayEnd}
                 settings={settings}
+                lunchWindow={lunchWindow}
                 interviewed={interviewed}
                 onToggleInterviewed={handleToggleInterviewed}
                 nowSec={nowSec}
@@ -276,6 +302,7 @@ export default function App() {
           {showSettings && (
             <SettingsPanel
               settings={settings}
+              detectedLunch={detectedLunch}
               onChange={setSettings}
               onClose={() => setShowSettings(false)}
             />

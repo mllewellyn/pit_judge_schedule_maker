@@ -114,11 +114,57 @@ export function buildAvailableSlots(unavailableWindows, dayStart, dayEnd, settin
  * @param {number} dayStart - Unix seconds
  * @param {number} dayEnd - Unix seconds
  * @param {object} settings
+ * @param {[number,number]|null} lunchWindow - [startSec, endSec] to block for all teams, or null
  * @returns {[number, number][]} available windows in Unix seconds
  */
-export function teamAvailability(teamMatches, dayStart, dayEnd, settings = {}) {
-  const unavailable = buildUnavailableWindows(teamMatches, settings)
+export function teamAvailability(teamMatches, dayStart, dayEnd, settings = {}, lunchWindow = null) {
+  let unavailable = buildUnavailableWindows(teamMatches, settings)
+  if (lunchWindow) {
+    unavailable = mergeWindows(
+      [...unavailable, lunchWindow].sort((a, b) => a[0] - b[0])
+    )
+  }
   return buildAvailableSlots(unavailable, dayStart, dayEnd, settings)
+}
+
+/**
+ * Detects the lunch break from a match schedule by finding the largest gap
+ * between consecutive match start times. Returns [startSec, endSec] of the
+ * blocked lunch window, or null if no clear break is found.
+ *
+ * The window starts at the end of the last match before the gap (accounting
+ * for match duration) and ends at the start of the next match.
+ *
+ * @param {object[]} matches - all matches for the event/day
+ * @returns {[number, number] | null}
+ */
+export function detectLunchBreak(matches) {
+  const startTimes = matches
+    .map(m => matchStartTime(m))
+    .filter(t => t != null)
+    .sort((a, b) => a - b)
+
+  if (startTimes.length < 3) return null
+
+  const gaps = []
+  for (let i = 1; i < startTimes.length; i++) {
+    gaps.push({
+      before: startTimes[i - 1],
+      after:  startTimes[i],
+      duration: startTimes[i] - startTimes[i - 1],
+    })
+  }
+
+  const sorted = [...gaps].sort((a, b) => a.duration - b.duration)
+  const medianDuration = sorted[Math.floor(sorted.length / 2)].duration
+  const maxGap = gaps.reduce((best, g) => g.duration > best.duration ? g : best)
+
+  // Only treat as lunch if clearly larger than typical inter-match gap
+  if (maxGap.duration < medianDuration * 2) return null
+
+  const lunchStart = maxGap.before + MATCH_DURATION_MINUTES * MIN_TO_SEC
+  const lunchEnd   = maxGap.after
+  return [lunchStart, lunchEnd]
 }
 
 /**

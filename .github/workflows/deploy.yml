@@ -68,8 +68,6 @@ jobs:
 
       - name: Build
         run: npm run build
-        env:
-          VITE_TBA_KEY: ${{ secrets.VITE_TBA_KEY }}
 
       - name: Setup Pages
         uses: actions/configure-pages@v5

@@ -83,7 +83,7 @@ function ExpandControls({ mode, onMode }) {
 
 // ── Main component ─────────────────────────────────────────────────────────
 
-export default function MergedView({ teams, matches, dayStart, dayEnd, settings, interviewed, onToggleInterviewed, nowSec }) {
+export default function MergedView({ teams, matches, dayStart, dayEnd, settings, lunchWindow, interviewed, onToggleInterviewed, nowSec }) {
   // expand mode: 'default' | 'all' | 'none'
   const [expandMode, setExpandMode] = useState('default')
   // per-group index overrides: Set of group indices whose expand state is flipped
@@ -101,8 +101,8 @@ export default function MergedView({ teams, matches, dayStart, dayEnd, settings,
 
   // ── Slot calculation ──────────────────────────────────────────
   const slotsPerTeam = useMemo(() =>
-    teams.map(t => teamAvailability(matchesForTeam(matches, t.number), dayStart, dayEnd, settings)),
-    [teams, matches, dayStart, dayEnd, settings]
+    teams.map(t => teamAvailability(matchesForTeam(matches, t.number), dayStart, dayEnd, settings, lunchWindow)),
+    [teams, matches, dayStart, dayEnd, settings, lunchWindow]
   )
 
   // ── Grid geometry ─────────────────────────────────────────────
