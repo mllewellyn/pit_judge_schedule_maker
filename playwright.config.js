@@ -1,7 +1,9 @@
-import { defineConfig, devices } from '@playwright/test'
+import { defineConfig } from '@playwright/test'
 
 export default defineConfig({
   testDir: './e2e',
+  // screenshots.spec.js has its own config (playwright.screenshots.config.js)
+  testIgnore: ['**/screenshots.spec.js'],
   timeout: 15000,
   expect: { timeout: 5000 },
   fullyParallel: false, // tests share a server; run sequentially to avoid localStorage collisions
@@ -18,12 +20,19 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { viewport: { width: 1280, height: 800 } },
     },
-    // Mobile viewport — judges use phones in the pits
+    // Mobile viewport — judges use phones in the pits.
+    // Uses Chromium (always installed) with a phone-sized viewport so no
+    // extra browser download is required.
     {
       name: 'mobile',
-      use: { ...devices['iPhone 13'] },
+      use: {
+        viewport: { width: 390, height: 844 },
+        deviceScaleFactor: 2,
+        isMobile: true,
+        hasTouch: true,
+      },
     },
   ],
 

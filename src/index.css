@@ -242,6 +242,29 @@ label {
   color: var(--clr-text-muted);
 }
 
+/* ── Now-line (current time indicator) ────────────────────────── */
+.timeline-now-line {
+  position: absolute;
+  left: 0; right: 0;
+  height: 2px;
+  background: #f44336;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.timeline-now-label {
+  position: absolute;
+  left: 3px;
+  top: -9px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #f44336;
+  background: var(--clr-bg);
+  padding: 0 2px;
+  line-height: 1;
+  border-radius: 2px;
+}
+
 /* ── Timeline ──────────────────────────────────────────────────── */
 .timeline-wrap {
   position: relative;
@@ -309,6 +332,29 @@ label {
   color: #fff;
 }
 
+/* Past available window — interview opportunity has passed */
+.timeline-block.available.past {
+  background: var(--clr-surface2);
+  border-color: var(--clr-border);
+  color: var(--clr-text-muted);
+  opacity: 0.55;
+}
+.timeline-block.available.past:hover {
+  background: var(--clr-surface2);
+  color: var(--clr-text-muted);
+}
+
+/* In-progress available window — interview window is open right now */
+.timeline-block.available.current {
+  background: #3d2e00;
+  border-color: #f9a825;
+  color: #fff9c4;
+}
+.timeline-block.available.current:hover {
+  background: #5a4300;
+  color: #fff9c4;
+}
+
 .timeline-block-label {
   writing-mode: horizontal-tb;
   white-space: nowrap;
@@ -329,7 +375,7 @@ label {
 
 .side-by-side-team {
   flex-shrink: 0;
-  width: 140px;
+  /* width set inline per component */
   scroll-snap-align: start;
 }
 
@@ -391,6 +437,139 @@ label {
   font-size: 0.9rem;
 }
 
+.merged-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.merged-intro {
+  font-size: 0.82rem;
+  flex: 1;
+  min-width: 0;
+}
+
+/* Expand / collapse control buttons */
+.merged-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.merged-controls-label {
+  font-size: 0.75rem;
+  color: var(--clr-text-muted);
+  margin-right: 2px;
+  white-space: nowrap;
+}
+
+.merged-ctrl-btn {
+  min-height: 28px;
+  min-width: 36px;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  background: var(--clr-surface2);
+  color: var(--clr-text-muted);
+  border: 1px solid var(--clr-border);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.merged-ctrl-btn:hover { background: var(--clr-surface); color: var(--clr-text); }
+.merged-ctrl-btn.active {
+  background: var(--clr-primary);
+  color: #fff;
+  border-color: var(--clr-primary-hover);
+}
+
+/* Excluded (interviewed) teams info note */
+/* Horizontally scrollable team-number strip inside a merged block.
+   The scrollbar is hidden visually — touch/trackpad scrolling still works. */
+.merged-team-scroll {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;          /* Firefox */
+}
+.merged-team-scroll::-webkit-scrollbar {
+  display: none;                  /* Chrome / Safari */
+}
+
+/* ── Merged view team checklist ──────────────────────────────────────────── */
+.merged-checklist {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.75rem;
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.75rem;
+  background: var(--clr-surface2);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+}
+
+.merged-checklist-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+  min-height: 28px; /* touch-friendly */
+  user-select: none;
+}
+
+.merged-checklist-item input[type='checkbox'] {
+  width: 15px;
+  height: 15px;
+  accent-color: var(--clr-available-light);
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.merged-excluded-note {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  background: var(--clr-surface2);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  padding: 0.35rem 0.6rem;
+  margin-bottom: 0.65rem;
+  font-size: 0.78rem;
+}
+
+.merged-excluded-label {
+  color: var(--clr-text-muted);
+  flex-shrink: 0;
+}
+
+.merged-excluded-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.merged-excluded-chip {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: 999px;
+  padding: 0.05rem 0.45rem;
+  font-size: 0.75rem;
+  color: var(--clr-text-muted);
+  text-decoration: line-through;
+}
+
 /* ── Settings panel ────────────────────────────────────────────── */
 .settings-overlay {
   position: fixed;
@@ -447,6 +626,202 @@ label {
   display: flex;
   gap: 0.5rem;
   margin-top: 1.25rem;
+}
+
+/* ── Share panel ───────────────────────────────────────────────── */
+.share-option {
+  background: var(--clr-surface2);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  user-select: none;
+}
+.share-option:hover { border-color: var(--clr-primary); }
+
+.share-option-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.share-option-label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.share-option-desc {
+  font-size: 0.78rem;
+  color: var(--clr-text-muted);
+  margin-top: 0.15rem;
+}
+
+.share-copy-badge {
+  flex-shrink: 0;
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  padding: 0.2rem 0.5rem;
+  font-size: 0.78rem;
+  white-space: nowrap;
+  color: var(--clr-text-muted);
+  transition: background 0.15s, color 0.15s;
+}
+.share-copy-badge.copied {
+  background: var(--clr-available);
+  border-color: var(--clr-available-light);
+  color: #a5d6a7;
+}
+
+.share-url-preview {
+  margin-top: 0.4rem;
+  font-family: ui-monospace, 'Cascadia Code', monospace;
+  font-size: 0.7rem;
+  color: var(--clr-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Help panel ────────────────────────────────────────────────── */
+.help-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+}
+
+.help-sheet {
+  background: var(--clr-surface);
+  border-top: 1px solid var(--clr-border);
+  border-radius: var(--radius) var(--radius) 0 0;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 1.25rem 1rem;
+  padding-bottom: calc(1.25rem + env(safe-area-inset-bottom));
+  max-height: 92dvh;
+  overflow-y: auto;
+}
+
+.help-sheet-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  gap: 0.5rem;
+}
+
+.help-sheet-header h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.help-section {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--clr-border);
+}
+
+.help-section:last-of-type {
+  border-bottom: none;
+}
+
+.help-section-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--clr-primary-hover);
+  margin-bottom: 0.75rem;
+}
+
+.help-section-body {
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.help-section-body p { margin-bottom: 0.5rem; }
+.help-section-body ol,
+.help-section-body ul {
+  padding-left: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+.help-section-body li { margin-bottom: 0.35rem; }
+.help-section-body code {
+  background: var(--clr-surface2);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  padding: 0.1rem 0.35rem;
+  font-size: 0.83em;
+  font-family: ui-monospace, 'Cascadia Code', monospace;
+}
+
+.help-tip {
+  color: var(--clr-text-muted);
+  font-size: 0.85rem !important;
+  background: var(--clr-surface2);
+  border-radius: var(--radius-sm);
+  padding: 0.4rem 0.6rem;
+  margin-top: 0.5rem !important;
+}
+
+.help-img-wrap {
+  margin-top: 1rem;
+  border-radius: var(--radius);
+  overflow: hidden;
+  border: 1px solid var(--clr-border);
+}
+
+.help-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+}
+
+.help-img-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  background: var(--clr-surface2);
+  color: var(--clr-text-muted);
+  font-size: 0.85rem;
+  text-align: center;
+  min-height: 100px;
+}
+
+.help-img-placeholder span:first-child { font-size: 1.5rem; }
+
+.help-footer {
+  background: var(--clr-surface2);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius);
+  padding: 0.85rem 1rem;
+  font-size: 0.85rem;
+  color: var(--clr-text-muted);
+  margin-top: 0.5rem;
+}
+
+.help-footer p { margin-bottom: 0.5rem; }
+.help-footer p:last-child { margin-bottom: 0; }
+
+.help-code {
+  display: block;
+  background: var(--clr-bg);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 0.75rem;
+  font-family: ui-monospace, 'Cascadia Code', monospace;
+  font-size: 0.85rem;
+  color: var(--clr-available-light);
+  margin: 0.5rem 0;
+  overflow-x: auto;
 }
 
 /* ── Misc utilities ────────────────────────────────────────────── */

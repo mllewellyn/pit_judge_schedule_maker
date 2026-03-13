@@ -133,3 +133,14 @@ export const MOCK_TEAMS = [
 // The suggested team list for the mock demo (comma-separated for the setup form)
 export const MOCK_DEFAULT_TEAMS = '254, 1678, 118, 148, 1114, 2056, 3015, 4414'
 export const MOCK_DEFAULT_EVENT_KEY = '2026waspk'
+
+/**
+ * Mock "current time" for development — frozen at 10:48 AM (minute 108 from 9:00 AM).
+ *
+ * At this moment:
+ *  - Morning matches (M1–M12) are past/grey.
+ *  - Teams 1114 and 254 have < 15 min left in their current window → yellow.
+ *  - Teams 148, 1678, 2056, 3015, 4414, 118 still have ≥ 20 min left → green.
+ *  - Afternoon matches are upcoming.
+ */
+export const MOCK_NOW_SEC = todayAt(108)

@@ -5,7 +5,7 @@ import { fetchEvents, fetchEventTeams } from '../api/tba.js'
 import { CURRENT_YEAR, MOCK_MODE } from '../config.js'
 import { MOCK_DEFAULT_EVENT_KEY, MOCK_DEFAULT_TEAMS } from '../api/mockData.js'
 
-export default function SetupForm({ savedEventKey, savedTeamsRaw, onLoad }) {
+export default function SetupForm({ savedEventKey, savedTeamsRaw, onLoad, onHelp }) {
   const [events, setEvents] = useState([])
   const [eventsLoading, setEventsLoading] = useState(true)
   const [eventsError, setEventsError] = useState(null)
@@ -84,6 +84,16 @@ export default function SetupForm({ savedEventKey, savedTeamsRaw, onLoad }) {
       <div className="setup-header">
         <h1>FRC Pit Judge Scheduler</h1>
         <p>Track team interview availability during competition</p>
+        {onHelp && (
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            onClick={onHelp}
+            style={{ marginTop: '0.75rem' }}
+          >
+            ? How to use this app
+          </button>
+        )}
       </div>
 
       {MOCK_MODE && (

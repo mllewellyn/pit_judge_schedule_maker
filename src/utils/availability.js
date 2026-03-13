@@ -3,6 +3,18 @@ import { MATCH_DURATION_MINUTES, DEFAULT_SETTINGS } from '../config.js'
 const MIN_TO_SEC = 60
 
 /**
+ * Filters a TBA match list to only those scheduled on today's local calendar date.
+ * Used for multi-day events so timelines only show the current competition day.
+ */
+export function filterTodayMatches(matches) {
+  const todayStr = new Date().toDateString()
+  return matches.filter(m => {
+    const t = matchStartTime(m)
+    return t != null && new Date(t * 1000).toDateString() === todayStr
+  })
+}
+
+/**
  * Given a TBA match object, returns the best available start timestamp (seconds).
  * Priority: actual_time > predicted_time > time
  */
