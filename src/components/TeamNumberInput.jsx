@@ -45,7 +45,6 @@ export default function TeamNumberInput({ value, onChange, roster, rosterLoading
               className={`team-chip${chip.valid === true ? ' valid' : chip.valid === false ? ' invalid' : ''}`}
               title={chip.valid === false ? 'Team not found at this event' : chip.nickname || ''}
             >
-              {chip.valid === false && <span aria-hidden>⚠</span>}
               {chip.valid === true && <span aria-hidden>✓</span>}
               {chip.number}
               {chip.nickname && <span className="team-chip-name">{chip.nickname}</span>}

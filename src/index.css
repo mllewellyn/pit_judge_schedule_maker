@@ -174,7 +174,7 @@ label {
 }
 
 .team-chip.valid { border-color: var(--clr-available-light); color: var(--clr-available-light); }
-.team-chip.invalid { border-color: var(--clr-warn); color: var(--clr-warn); }
+.team-chip.invalid { border-color: #f5c518; color: #f5c518; background: #f5c51812; }
 .team-chip-name { font-weight: 400; color: var(--clr-text-muted); font-size: 0.75rem; }
 
 /* ── Tab bar ───────────────────────────────────────────────────── */
