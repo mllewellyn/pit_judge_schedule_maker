@@ -120,6 +120,7 @@ export default function App() {
   async function loadSchedule(eventKey, teamsRaw, eventName) {
     setLoading(true)
     setFetchError(null)
+    setNoSchedule(false)
     try {
       const [matchData, rosterData] = await Promise.all([
         fetchMatches(eventKey),
